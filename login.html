@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Project Access</h2>
+    <input type="password" id="pass" placeholder="Enter Access Code">
+    <button onclick="checkAccess()">Enter</button>
+
+    <script>
+        function checkAccess() {
+            const pass = document.getElementById('pass').value;
+            if(pass === "1234") { // Replace with your password
+                sessionStorage.setItem('authorized', 'true');
+                const params = new URLSearchParams(window.location.search);
+                window.location.href = 'details.html?project=' + params.get('project');
+            } else {
+                alert("Incorrect code.");
+            }
+        }
+    </script>
+</body>
+</html>

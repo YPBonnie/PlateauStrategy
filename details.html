@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><link rel="stylesheet" href="style.css"></head>
+<body>
+    <div id="content">
+        <h2 id="title">Loading...</h2>
+        <p><strong>Goal:</strong> <span id="goal"></span></p>
+        <p><strong>Status:</strong> In Progress</p>
+        
+        <!-- Push-down Contact Form -->
+        <details>
+            <summary>Interested? Click to get in touch.</summary>
+            <form id="contactForm">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <button type="submit">Submit</button>
+            </form>
+        </details>
+    </div>
+
+    <script>
+        // Redirect if not authorized
+        if(!sessionStorage.getItem('authorized')) window.location.href = 'login.html';
+        
+        // Dynamically load data based on project
+        const project = new URLSearchParams(window.location.search).get('project');
+        document.getElementById('title').innerText = "Project " + project;
+        document.getElementById('goal').innerText = project === 'A' ? "Optimization Logic" : "Anomaly Detection";
+    </script>
+</body>
+</html>
