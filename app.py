@@ -1,13 +1,12 @@
 import streamlit as st
 
-# Initialize session state for auth and selection
+# Initialize session state
 if 'authorized' not in st.session_state:
     st.session_state.authorized = False
 
 st.title("Prospex Portfolio")
 
 if not st.session_state.authorized:
-    # ... (Your existing login logic)
     password = st.text_input("Enter Access Code", type="password")
     if st.button("Enter"):
         if password == "1234":
@@ -23,49 +22,50 @@ else:
 
     with col2:
         st.image("images/B.png", use_container_width=True)
-        # This button replaces your text and triggers the details view
         if st.button("Details for Project B", key="btn_b"):
-            st.session_state.selected_project = "B"
+            st.session_state.selected_project = "Project B"
     
+    # Define project data - Keys match the strings used in button clicks
+    data = {
+        "Rideshare Solution": {
+            "goal": "Innovative business solution Rent-2-Own in modern transportation.",
+            "progress": "30% - initial installment phase.",
+            "roi": "43%",
+            "margin": "13%"
+        },
+        "Project B": {
+            "goal": "Placeholder for future initiative.",
+            "progress": "To be filled in.",
+            "roi": "0%",
+            "margin": "0%"
+        }
+    }
+
     # Detailed View
     if 'selected_project' in st.session_state:
-        st.divider()
         proj = st.session_state.selected_project
-        st.header(f"Project {proj} Detailed Summary")
         
-        # Define project data
-        data = {
-            "A": {
-                "goal": "Innovative business solution Rent-2-Own in morden transporation",
-                "progress": "30% - initial installment phase.",
-                "annualized return (APY)": "43%",
-                "margin profit": "13%"
-            },
-            "B" : {
-                "goal": "fill in details",
-                "progress": "to be filled in",
-                "expected ROI" : "to be filled in",
-                "margin profit": "to be filled in"
-            }
-        }
+        # Check if project exists in data to prevent KeyError
+        if proj in data:
+            st.divider()
+            st.header(f"{proj} Detailed Summary")
+            
+            st.write(f"**Goal:** {data[proj]['goal']}")
+            st.write(f"**Current Progress:** {data[proj]['progress']}")
 
-        # Display the metrics in a clean row
-        st.write(f"**Goal:** {data[proj]['goal']}")
-        st.write(f"**Current Progress:** {data[proj]['progress']}")
-
-        c1, c2 = st.columns(2)
-        c1.metric("Expected ROI", data[proj]['roi'])
-        c2.metric("Margin Profit", data[proj]['margin'])
-        
-        st.divider()
-        
-        # The "Push-down" form
-        with st.expander("Interested in this project? Get in touch."):
-            with st.form(f"contact_form_{proj}"):
-                name = st.text_input("Your Name")
-                email = st.text_input("Your Email")
-                phone = st.text_input("Your Phone Number")
-                submit = st.form_submit_button("Submit")
-                if submit: 
-                    st.success(f"Thank you, {name}! I will reach out soon.")
-        
+            c1, c2 = st.columns(2)
+            c1.metric("Expected ROI/APY", data[proj]['roi'])
+            c2.metric("Margin Profit", data[proj]['margin'])
+            
+            st.divider()
+            
+            with st.expander("Interested in this project? Get in touch."):
+                with st.form(f"contact_form_{proj}"):
+                    name = st.text_input("Your Name")
+                    email = st.text_input("Your Email")
+                    phone = st.text_input("Your Phone Number")
+                    submit = st.form_submit_button("Submit")
+                    if submit: 
+                        st.success(f"Thank you, {name}! I will reach out soon.")
+        else:
+            st.error("Project data not found.")
