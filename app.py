@@ -67,5 +67,5 @@ else:
                 phone = st.text_input("Your Phone Number")
                 submit = st.form_submit_button("Submit")
                 if submit: 
-                    st.success(f"Thank you, {name}!" I will reach out soon.)
+                    st.success(f"Thank you, {name}! I will reach out soon.")
         
