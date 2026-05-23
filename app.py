@@ -20,10 +20,10 @@ else:
     # Gallery View
     col1, col2 = st.columns(2)
     with col1:
-        if st.image("images/A.png", caption="Project A"):
+        if st.image("images/A.png", caption="Project AutoSharing", width=300):
             st.session_state.project = "A"
     with col2:
-        if st.image("images/B.png", caption="Project B"):
+        if st.image("images/B.png", caption="Project Restaurant", width=300):
             st.session_state.project = "B"
     
     # Detailed View (if a project is selected)
@@ -37,6 +37,7 @@ else:
             with st.form("contact_form"):
                 name = st.text_input("Your Name")
                 email = st.text_input("Your Email")
+                phone = st.text_input("Your Phone Number")
                 submit = st.form_submit_button("Submit")
                 if submit:
                     st.success(f"Thanks {name}, I'll reach out!")
