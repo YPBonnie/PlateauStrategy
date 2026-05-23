@@ -14,8 +14,8 @@ prospex-site/
 ├── style.css           # Global styles
 ├── script.js           # Logic (click handlers, simple auth simulation)
 ├── images/             # Folder for your assets
-│   ├── A.jpg
-│   └── B.jpg
+│   ├── A.png
+│   └── B.png
 └── assets/             # Icons or project documentation
 
 **Option B** Host it for free using Streamlit Community Cloud
