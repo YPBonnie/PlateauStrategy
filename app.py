@@ -5,7 +5,20 @@ if 'authorized' not in st.session_state:
     st.session_state.authorized = False
 
 st.title("Prospex Portfolio")
+# --- Introduction Section ---
+with st.container():
+    st.markdown("""
+    ### Welcome to Prospex
+    **Prospex** high-impact initiative investment platform focused on operational efficiency, 
+    pricing optimization, and business-driven data strategy. 
+    
+    *   **What is this:** A curated showcase of advanced analytical frameworks applied to real-world marketplace challenges.
+    *   **Who built it:** Bonnie Dou, a Data Scientist with 10+ years of experience in enterprise environments (eBay, Microsoft, Google), specializing in pricing engines and AI deployment.
+    *   **The Outcome:** Scalable, robust solutions that balance aggressive revenue growth with disciplined risk management.
+    """)
+    st.divider()
 
+# --- Login logic ---
 if not st.session_state.authorized:
     password = st.text_input("Enter Access Code", type="password")
     if st.button("Enter"):
