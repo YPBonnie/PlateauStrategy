@@ -1,5 +1,24 @@
 import streamlit as st
 
+# Custom Layout for Header
+header_col1, header_col2 = st.columns([2,1])
+
+with header_col1:
+    st.markdown("#### [PlateauStragegy.US](https://plateaustrategy.us)")
+
+with header_col2:
+    #Creating a horizontal menu with buttons
+    menu_col1, menu_col2 = st.columns(2)
+    with menu_col1:
+        if st.button("Sign up"):
+            st.session_stage.page = "signup"
+
+    with menu_col2:
+        if st.button("Login"):
+            st.session_state.page = "login"
+
+st.divider()
+
 # Initialize session state
 if 'authorized' not in st.session_state:
     st.session_state.authorized = False
@@ -17,6 +36,13 @@ with st.container():
     *   **The Outcome:** Scalable, robust solutions that balance aggressive revenue growth with disciplined risk management.
     """)
     st.divider()
+
+if 'page' not in st.session_state:
+    st.session_state.page = "home"
+
+if st.session_state.page == "login":
+    ## Show your existing password logic here
+    password = st.text_input("Enter Access Code", type = "password")
 
 # --- Login logic ---
 if not st.session_state.authorized:
