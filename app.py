@@ -5,6 +5,22 @@ from datetime import datetime
 import gspread
 from google.oauth2.service_account import Credentials
 
+# --- DEBUG BLOCK: remove after testing ---
+try:
+    creds = Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=[
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive"
+        ]
+    )
+    client = gspread.authorize(creds)
+    sheet = client.open("ProspeX Signups").sheet1
+    st.success("Connected to Google Sheet successfully")
+except Exception as e:
+    st.error(f"Connection failed: {e}")
+# --- END DEBUG BLOCK ---
+
 def save_signup(name, email, phone):
     creds = Credentials.from_service_account_info(
         st.secrets["gcp_service_account"],
