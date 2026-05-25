@@ -2,20 +2,20 @@ import streamlit as st
 import csv
 import os
 from datetime import datetime
+import gspread
+from google.oauth2.service_account import Credentials
 
 def save_signup(name, email, phone):
-    file = os.path.join(os.path.dirname(__file__), "signups.csv")
-    file_exists = os.path.isfile(file)
-    with open(file, "a", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["timestamp", "name", "email", "phone"])
-        if not file_exists:
-            writer.writeheader()
-        writer.writerow({
-            "timestamp": datetime.now().isoformat(),
-            "name": name,
-            "email": email,
-            "phone": phone
-        })
+    creds = Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=[
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive"
+        ]
+    )
+    client = gspread.authorize(creds)
+    sheet = client.open("ProspeX Signups").sheet1
+    sheet.append_row([datetime.now().isoformat(), name, email, phone])
 
 @st.dialog("Sign Up")
 def show_signup():
