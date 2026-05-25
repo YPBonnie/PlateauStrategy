@@ -28,9 +28,12 @@ def show_signup():
         if not name or not email:
             st.warning("Name and email are required.")
         else:
-            save_signup(name, email, phone)
-            st.success(f"Thank you, {name}! We'll be in touch.")
-            st.rerun()
+            try:
+                save_signup(name, email, phone)
+                st.success(f"Thank you, {name}! We'll be in touch.")
+                st.rerun()
+            except Exception as e:
+                st.error(f"Error saving signup: {e}")
 
 # Initialize session state
 if 'page' not in st.session_state:
