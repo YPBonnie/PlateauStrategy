@@ -11,7 +11,7 @@ if 'authorized' not in st.session_state:
 header_col1, header_col2 = st.columns([2,1])
 
 with header_col1:
-    st.markdown("#### [PlateauStrategy.US](https://plateaustrategy.us)")
+    st.markdown("#### [PlateauStrategy.US](https://plateaustrategy-ghy8bs3mwfcmre9idoaujr.streamlit.app/)")
 
 with header_col2:
     #Creating a horizontal menu with buttons
@@ -28,12 +28,12 @@ st.divider()
 
 
 
-st.title("Prospex Portfolio")
+st.title("ProspeX Portfolio")
 # --- Introduction Section ---
 with st.container():
     st.markdown("""
-    ### Welcome to Prospex
-    **Prospex** high-impact initiative investment platform focused on operational efficiency, 
+    ### Welcome to ProspeX
+    **ProspeX** high-impact initiative investment platform focused on operational efficiency, 
     pricing optimization, and business-driven data strategy. 
     
     *   **What is this:** A curated showcase of advanced analytical frameworks applied to real-world marketplace challenges.
