@@ -1,4 +1,36 @@
 import streamlit as st
+import csv
+import os
+from datetime import datetime
+
+@st.dialog("Sign Up")
+def show_signup():
+    st.write("Join the Prospex investor list to receive updates.")
+    name  = st.text_input("Full Name")
+    email = st.text_input("Email Address")
+    phone = st.text_input("Phone Number")
+
+    if st.button("Submit", key="signup_submit"):
+        if not name or not email:
+            st.warning("Name and email are required.")
+        else:
+            save_signup(name, email, phone)
+            st.success(f"Thank you, {name}! We'll be in touch.")
+            st.rerun()
+
+def save_signup(name, email, phone):
+    file = "signups.csv"
+    file_exists = os.path.isfile(file)
+    with open(file, "a", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["timestamp", "name", "email", "phone"])
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow({
+            "timestamp": datetime.now().isoformat(),
+            "name": name,
+            "email": email,
+            "phone": phone
+        })
 
 # Initialize session state
 if 'page' not in st.session_state:
@@ -18,7 +50,7 @@ with header_col2:
     menu_col1, menu_col2 = st.columns(2)
     with menu_col1:
         if st.button("Sign up"):
-            st.session_state.page = "signup"
+            show_signup()
 
     with menu_col2:
         if st.button("Login"):
