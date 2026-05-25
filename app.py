@@ -5,17 +5,48 @@ from datetime import datetime
 import gspread
 from google.oauth2.service_account import Credentials
 
-def save_signup(name, email, phone):
+def get_sheet(sheet_name):
     creds = Credentials.from_service_account_info(
         st.secrets["gcp_service_account"],
-        scopes=[
+        scopes = [
             "https://www.googleapis.com/auth/spreadsheets",
             "https://www.googleapis.com/auth/drive"
         ]
     )
     client = gspread.authorize(creds)
-    sheet = client.open("ProspeX Signups").sheet1
+    return client.open(sheet_name).sheet1
+
+def save_signup(name, email, phone):
+    sheet = get_sheet("ProspeX Signups")
     sheet.append_row([datetime.now().isoformat(), name, email, phone])
+
+def save_user(name, email):
+    sheet = get_sheet("ProspeX Users")
+    sheet.append_row([email, "", "pending", name, datetime.now().isoformat()])
+
+def check_login(email, password):
+    sheet = get_sheet("ProspeX Users")
+    records = sheet.get_all_records()
+    for row in records:
+        if row["email"].lower() == email.lower():
+            if row["status"] != "approved":
+                return False, "YOur account is pending approval."
+            if str(row["password"]) == password:
+                return True, row["name"]
+            return False, "Incorrect password."
+    return False, "Email not found. Please sign up first."
+
+#def save_signup(name, email, phone):
+#    creds = Credentials.from_service_account_info(
+#        st.secrets["gcp_service_account"],
+#        scopes=[
+#            "https://www.googleapis.com/auth/spreadsheets",
+#            "https://www.googleapis.com/auth/drive"
+#        ]
+#    )
+#    client = gspread.authorize(creds)
+#    sheet = client.open("ProspeX Signups").sheet1
+#    sheet.append_row([datetime.now().isoformat(), name, email, phone])
 
 @st.dialog("Sign Up")
 def show_signup():
@@ -30,17 +61,37 @@ def show_signup():
         else:
             try:
                 save_signup(name, email, phone)
+                save_user(name, email)
                 st.success(f"Thank you, {name}! We'll be in touch.")
                 st.rerun()
             except Exception as e:
-                st.error(f"Error saving signup: {e}")
+                st.error(f"Error: {e}")
+
+@st.dialog("Login")
+def show_login():
+    email = st.text_input("Email Address")
+    password = st.text_input("Password", type = "password")
+
+    if st.button("Login", key="login_submit"):
+        if not email or not password:
+            st.warning("Please enter your email and password.")
+        else:
+            try:
+                success, message = check_login(email, password)
+                if success:
+                    st.session_state.authorized = True
+                    st.session_sate.user_name = message
+                    st.rerun()
+                else:
+                    st.error(message)
+            except Exception as e:
+                st.error(f"Error: {e}")
 
 # Initialize session state
-if 'page' not in st.session_state:
-    st.session_state.page = "home"
-
 if 'authorized' not in st.session_state:
     st.session_state.authorized = False
+if 'user_name' not in st.session_state:
+    st.session_state.user_name = ""
 
 # Header
 header_col1, header_col2 = st.columns([2, 1])
@@ -51,15 +102,22 @@ with header_col1:
 with header_col2:
     menu_col1, menu_col2 = st.columns(2)
     with menu_col1:
-        if st.button("Sign up"):
-            show_signup()
+        if not st.session_sate.authorized:
+            if st.button("Sign up"):
+                show_signup()
     with menu_col2:
-        if st.button("Login"):
-            st.session_state.page = "login"
+        if st.session_state.authorized:
+            if st.button("Logout"):
+                st.session_state.authorized = False
+                st.session_state.user_name = ""
+                st.rerun()
+        else:
+            if st.button("Login"):
+                show_login()
 
 st.divider()
 
-st.title("ProspeX Portfolio")
+st.title("Plateau Strategy Phase V: ProspeX")
 
 with st.container():
     st.markdown("""
@@ -73,14 +131,10 @@ with st.container():
     """)
     st.divider()
 
-# Login logic
-if not st.session_state.authorized:
-    password = st.text_input("Enter Access Code", type="password")
-    if st.button("Enter"):
-        if password == "1234":
-            st.session_state.authorized = True
-            st.rerun()
-else:
+# Project details — approved users only
+if st.session_state.authorized:
+    st.write(f"Welcome back, **{st.session_state.user_name}**!")
+
     col1, col2 = st.columns(2)
 
     with col1:
@@ -134,3 +188,5 @@ else:
                         st.success(f"Thank you, {name}! I will reach out soon.")
         else:
             st.error("Project data not found.")
+else:
+    st.info("Please log in to view project details.")
