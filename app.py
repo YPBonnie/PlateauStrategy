@@ -1,17 +1,24 @@
 import streamlit as st
 
+# Initialize session state
+if 'page' not in st.session_state:
+    st.session_state.page = "home"
+
+if 'authorized' not in st.session_state:
+    st.session_state.authorized = False
+
 # Custom Layout for Header
 header_col1, header_col2 = st.columns([2,1])
 
 with header_col1:
-    st.markdown("#### [PlateauStragegy.US](https://plateaustrategy.us)")
+    st.markdown("#### [PlateauStrategy.US](https://plateaustrategy.us)")
 
 with header_col2:
     #Creating a horizontal menu with buttons
     menu_col1, menu_col2 = st.columns(2)
     with menu_col1:
         if st.button("Sign up"):
-            st.session_stage.page = "signup"
+            st.session_state.page = "signup"
 
     with menu_col2:
         if st.button("Login"):
@@ -19,9 +26,7 @@ with header_col2:
 
 st.divider()
 
-# Initialize session state
-if 'authorized' not in st.session_state:
-    st.session_state.authorized = False
+
 
 st.title("Prospex Portfolio")
 # --- Introduction Section ---
@@ -37,12 +42,7 @@ with st.container():
     """)
     st.divider()
 
-if 'page' not in st.session_state:
-    st.session_state.page = "home"
 
-if st.session_state.page == "login":
-    ## Show your existing password logic here
-    password = st.text_input("Enter Access Code", type = "password")
 
 # --- Login logic ---
 if not st.session_state.authorized:
