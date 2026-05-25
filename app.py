@@ -80,7 +80,7 @@ def show_login():
                 success, message = check_login(email, password)
                 if success:
                     st.session_state.authorized = True
-                    st.session_sate.user_name = message
+                    st.session_state.user_name = message
                     st.rerun()
                 else:
                     st.error(message)
@@ -102,7 +102,7 @@ with header_col1:
 with header_col2:
     menu_col1, menu_col2 = st.columns(2)
     with menu_col1:
-        if not st.session_sate.authorized:
+        if not st.session_state.authorized:
             if st.button("Sign up"):
                 show_signup()
     with menu_col2:
