@@ -2,3 +2,4 @@ streamlit
 pillow
 gspread
 google-auth
+stripe
